@@ -15,17 +15,17 @@ class LibraryApp(QMainWindow):
         self.setWindowTitle('Smart Library Management System')
         self.setGeometry(100, 100, 600, 400)
 
-        # العناصر الرئيسية
+        # Key elements
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
         self.layout = QVBoxLayout()
 
-        # خانات الإدخال
+        # Input boxes
         self.title_input = QLineEdit(); self.title_input.setPlaceholderText('Book Title')
         self.author_input = QLineEdit(); self.author_input.setPlaceholderText('Author')
         self.isbn_input = QLineEdit(); self.isbn_input.setPlaceholderText('ISBN')
 
-        # الأزرار
+        # Buttons
         self.add_btn = QPushButton('add book')
         self.add_btn.clicked.connect(self.add_book)
         
@@ -33,12 +33,12 @@ class LibraryApp(QMainWindow):
         self.delete_btn.setStyleSheet("background-color: #ff4444; color: white;")
         self.delete_btn.clicked.connect(self.delete_book)
 
-        # الجدول
+        # Table
         self.table = QTableWidget()
         self.table.setColumnCount(4)
         self.table.setHorizontalHeaderLabels(['ID', 'Title', 'Author', 'ISBN'])
 
-        # --- الجزء الخاص بالبحث ---
+        # --- Research Section ---
         search_layout = QHBoxLayout()
         self.search_input = QLineEdit()
         self.search_input.setPlaceholderText('search with the book name or ISBN')
@@ -50,7 +50,7 @@ class LibraryApp(QMainWindow):
         self.layout.addLayout(search_layout)
         # -------------------------
 
-        # إضافة العناصر للواجهة
+        # Adding elements to the interface
         self.layout.addWidget(QLabel("add new book: "))
         self.layout.addWidget(self.title_input)
         self.layout.addWidget(self.author_input)
@@ -74,7 +74,7 @@ class LibraryApp(QMainWindow):
         if title and author and isbn:
             new_book = Book(title, author, isbn)
             if self.db.add_book(new_book):
-                self.load_data() # تحديث الجدول
+                self.load_data() # Table Update
                 self.title_input.clear(); self.author_input.clear(); self.isbn_input.clear()
             else:
                 QMessageBox.warning(self, "Error", "Add failed (Possibly duplicate ISBN)")
@@ -91,9 +91,9 @@ class LibraryApp(QMainWindow):
 
     def search_books(self):
         keyword = self.search_input.text().lower()
-        all_books = self.db.get_all_books() # بنجيب البيانات في List
+        all_books = self.db.get_all_books() # We get the data in a List
         
-        # تطبيق الـ Data Structure (Filtering a List)
+        # Applying Data Structure (Filtering a List)
         filtered_books = [
             b for b in all_books 
             if keyword in b['title'].lower() or keyword in b['isbn']
@@ -102,7 +102,7 @@ class LibraryApp(QMainWindow):
         self.display_books(filtered_books)
 
     def display_books(self, books_list):
-        # دالة مساعدة لعرض القائمة المفلترة في الجدول
+        # Helper function to display the filtered list in the table
         self.table.setRowCount(0)
         for row_number, row_data in enumerate(books_list):
             self.table.insertRow(row_number)

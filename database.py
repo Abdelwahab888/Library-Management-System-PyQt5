@@ -1,10 +1,10 @@
-# database.py (نسخة SQLite - الأضمن للتسليم)
+# database.py (SQLite version - the most reliable for delivery)
 import sqlite3
 import os
 
 class DatabaseHandler:
     def __init__(self):
-        # السطر ده هيعرفنا البرنامج شايف الفولدر فين بالظبط
+        #This line will tell us exactly where the program sees the folder.
         db_path = os.path.join(os.getcwd(), 'library.db')
         print(f"Warning: The database is located here: {db_path}")
         
@@ -41,8 +41,13 @@ class DatabaseHandler:
     def get_all_books(self):
         self.cursor.execute("SELECT * FROM books")
         rows = self.cursor.fetchall()
-        # تحويل النتائج لقائمة قواميس عشان تناسب الكود بتاعنا
+        # Convert the results to a dictionary list to suit our code
         return [dict(row) for row in rows]
+
+    def delete_book(self, book_id):
+        query = "DELETE FROM books WHERE id = ?"
+        self.cursor.execute(query, (book_id,))
+        self.connection.commit()
 
     def delete_book(self, book_id):
         query = "DELETE FROM books WHERE id = ?"
